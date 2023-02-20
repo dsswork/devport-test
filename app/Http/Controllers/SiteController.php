@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Link;
 use App\Models\Result;
+use App\Services\Points;
 use Illuminate\Http\Request;
-use Laravel\Sanctum\PersonalAccessToken;
 
 class SiteController extends Controller
 {
@@ -13,44 +14,27 @@ class SiteController extends Controller
         return view('site.index');
     }
 
-    public function show($token, Request $request)
+    public function show($slug, Request $request)
     {
-        $result = null;
+        $link = Link::slug($slug)->valid()->firstOrFail();
+        $user_id = $link->user_id;
+
+        $points = null;
         $isWin = false;
-        $sum=0;
+        $value=0;
+
         if($request->play) {
-            $result = rand(1, 1000);
-            if($result%2==0) {
+            $points = rand(1, 1000);
+            if($points%2==0) {
                 $isWin = true;
-                if($result>900) {
-                    $sum = $result*0.7;
-                }
-
-                if($result>600&&$result<901) {
-                    $sum = $result*0.5;
-                }
-
-                if($result>300&&$result<601) {
-                    $sum = $result*0.3;
-                }
-
-                if($result<301) {
-                    $sum = $result*0.1;
-                }
+                $value = Points::calculate($points);
             }
 
+            Result::create(compact(['points', 'value', 'user_id']));
         }
 
-        $mytoken = PersonalAccessToken::where('token', $token)->first();
-        $user = $mytoken->tokenable;
+        $history = Result::where('user_id', $user_id)->latest('created_at')->limit(3)->get();
 
-        dd($user);
-
-        Result::create([
-            'value' => $sum,
-            'user_id' => 1
-        ]);
-
-        return view('site.show', compact(['token', 'result', 'isWin', 'sum']));
+        return view('site.show', compact(['slug', 'points', 'isWin', 'value', 'history', 'link', 'user_id']));
     }
 }

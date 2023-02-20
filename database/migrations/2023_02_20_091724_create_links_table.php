@@ -14,11 +14,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('results', function (Blueprint $table) {
+        Schema::create('links', function (Blueprint $table) {
             $table->id();
-            $table->float('value');
-            $table->integer('points');
+            $table->string('slug');
             $table->foreignIdFor(User::class)->constrained()->onDelete('cascade');
+            $table->timestamp('valid_until');
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('results');
+        Schema::dropIfExists('links');
     }
 };

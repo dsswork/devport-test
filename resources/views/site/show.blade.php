@@ -1,41 +1,46 @@
-
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Signin Template · Bootstrap v5.3</title>
-
-    <link href="{{ asset('dist/css/bootstrap.min.css') }}" rel="stylesheet">
-
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-</head>
-<body class="text-center">
-
-<main class="form-signin w-100 m-auto">
+<x-layout title="Register">
     <div>
-    <a href="{{ route('site.show', compact('token') + ['play' => 1]) }}" class="btn btn-danger">Imfeelinglucky</a>
-    <button class="btn btn-success"
-            data-bs-toggle="modal" data-bs-target="#history">History</button>
+        <button class="btn btn-danger my-2" form="play">Imfeelinglucky</button>
+        <button class="btn btn-success my-2" data-bs-toggle="modal" data-bs-target="#history">History
+        </button>
+        <button class="btn btn-dark my-2" form="deactivate">Deactivate Link</button>
+        <button class="btn btn-primary my-2" form="generate">Generate New Link</button>
     </div>
-    @if($result)
-    <div>
-        <h2>Points: {{ $result }}</h2>
-    </div>
-    <div>
-        @if($isWin)
-        <button class="btn btn-success">WIN {{ $sum }}</button>
-        @else
-            <button class="btn btn-secondary">LOSE</button>
-        @endif
-    </div>
+    @if($points)
+        <div>
+            <h2>Points: {{ $points }}</h2>
+        </div>
+        <div>
+            @if($isWin)
+                <button class="btn btn-success">WIN {{ $value }}</button>
+            @else
+                <button class="btn btn-secondary">LOSE</button>
+            @endif
+        </div>
     @endif
-</main>
 
+    <form action="{{ route('links.destroy', compact('link')) }}" method="post" id="deactivate">
+        @csrf
+        @method('delete')
+    </form>
 
+    <form action="{{ route('site.play', compact('slug')) }}" method="post" id="play">
+        @csrf
+        @method('post')
+        <input type="text" name="play" value="1" hidden>
+    </form>
 
-<x-history-modal />
+    <form action="{{ route('links.store') }}" method="post" id="activate">
+        @csrf
+        @method('post')
+    </form>
 
-<script src="{{ asset('dist/js/bootstrap.bundle.min.js') }}"></script>
-</body>
-</html>
+    <form action="{{ route('links.store') }}" method="post" id="generate">
+        @csrf
+        @method('post')
+        <input type="text" name="user_id" value="{{ $user_id }}" hidden>
+    </form>
+
+    <x-history-modal :$history/>
+
+</x-layout>

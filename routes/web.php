@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\SiteController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers as Web;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [SiteController::class, 'index'])->name('site.index');
-Route::get('/users/{token}', [SiteController::class, 'show'])->name('site.show');
-Route::post('users', [UserController::class, 'store'])->name('users.store');
+Route::get('/', [Web\SiteController::class, 'index'])->name('site.index');
+Route::get('/users/{slug}', [Web\SiteController::class, 'show'])->name('site.show');
+Route::post('/users/{slug}', [Web\SiteController::class, 'show'])->name('site.play');
+Route::post('users', [Web\UserController::class, 'store'])->name('users.store');
+Route::resource('links', Web\LinkController::class);
