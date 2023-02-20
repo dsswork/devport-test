@@ -6,4 +6,4 @@
         <a class="btn btn-primary" href="{{ $link }}">Go to link</a>
         <p class="mt-5 mb-3 text-muted">&copy; 2023</p>
     </form>
-</x-layout>>
+</x-layout>
