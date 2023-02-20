@@ -1,4 +1,4 @@
-<x-layout title="Register">
+<x-layout title="Game">
     <div>
         <button class="btn btn-danger my-2" form="play">Imfeelinglucky</button>
         <button class="btn btn-success my-2" data-bs-toggle="modal" data-bs-target="#history">History
